@@ -5,11 +5,15 @@ from starlette.middleware.cors import CORSMiddleware
 import uvicorn, aiohttp, asyncio
 from io import BytesIO
 
+from fastai import *
 from fastai.vision import *
 
-export_file_url = 'https://www.dropbox.com/s/y4kl2gv1akv7y4i/stage-2.pth?raw=1'
+export_file_url = 'https://drive.google.com/uc?export=download&id=1iey2Sjk_JEIi3puCjkOrQw8UciLmDAng'
 export_file_name = 'export.pkl'
-classes = ['black', 'grizzly', 'teddys']
+classes = ['maruti-baleno','maruti-swift','maruti-wagonr', 'maruti-vitara-breeza', 'hyundai-creta', 'mahindra-scorpio'
+          , 'hyundai-elite-i20', 'maruti-dzire', 'renault-kwid', 'toyota-fortuner', 'toyota-innova', 'maruti-ertiga'
+          , 'mahindra-bolero', 'hyundai-grand-i10', 'honda-amaze', 'hyundai-verna', 'honda-city']
+#classes = ['black', 'grizzly', 'teddys']
 path = Path(__file__).parent
 
 app = Starlette()
@@ -51,7 +55,7 @@ async def analyze(request):
     data = await request.form()
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    prediction=learn.predict(img)[0]
+    prediction = learn.predict(img)[0]
     return JSONResponse({'result': str(prediction)})
 
 if __name__ == '__main__':
